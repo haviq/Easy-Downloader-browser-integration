@@ -1,0 +1,59 @@
+import pkg from "../../package.json";
+import ManifestPermissions = chrome.runtime.ManifestPermissions;
+
+export function getBaseManifest() {
+    const icon48="icons/icon-48.png"
+    const icon96="icons/icon-96.png"
+    const icon128="icons/icon-128.png"
+    return {
+        name: pkg.displayName,
+        description: pkg.description,
+        version: pkg.version,
+        homepage_url:pkg.homepage,
+        author: pkg.author,
+        default_locale: "en",
+        icons: {
+            48: icon48,
+            96: icon96,
+            128: icon128,
+        },
+        content_scripts: [{
+            matches: ["*://*/*"],
+            js: ["src/entrypoint/ContentScript.ts"],
+        }],
+        options_ui: {
+            page: "src/entrypoint/OptionUi/index.html",
+            open_in_tab: true,
+        },
+        web_accessible_resources:[
+        ]
+    }
+}
+
+
+export function getBrowserActionInfo(){
+    return  {
+        default_title: "Easy Download Manager",
+        default_popup: "src/entrypoint/BrowserAction/index.html",
+    }
+}
+export function getBackgroundScript(){
+    return "src/entrypoint/Background.ts"
+}
+export function getHostPermissions(){
+    return [
+        "*://*/*",
+    ]
+}
+export function getCommonPermissions():ManifestPermissions[]{
+    return [
+        "contextMenus",
+        "webRequest",
+        "cookies",
+        "storage",
+        "tabs",
+        "downloads",
+        "notifications",
+        "nativeMessaging",
+    ]
+}
